@@ -1,0 +1,23 @@
+# Filename: captive-portal-management.service
+# Author: Bc. Ondřej Mikula @ FIT BUT
+# Project: Captive Portal Management System
+# Date: 2024-2025
+# License: MIT License
+# Contact: xmikul69@vut.cz
+
+[Unit]
+Description=Captive Portal Management
+After=network.target
+
+[Service]
+User=ss11mik
+WorkingDirectory=/home/ss11mik/projs/skolni/VUT/MIT/3mit/DP/vypracovani/appl/v1_flask/
+# WorkingDirectory=/opt/CPM/
+ExecStart=/bin/sh -c 'cd /home/ss11mik/projs/skolni/VUT/MIT/3mit/DP/vypracovani/appl/v1_flask/ && source .venv/bin/activate && flask --app CPM run'
+# ExecStart=/bin/sh -c 'cd /opt/CPM/ && source .venv/bin/activate && flask --app CPM run'
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
