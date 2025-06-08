@@ -1,0 +1,41 @@
+<fieldset>
+  <div class="field">
+    <label class="label">Remote Host</label>
+    <div class="control">
+      <input class="input" type="text" name="remote_host" placeholder="192.168.1.1" value="{{ config.get_from_connection(connection_id, "remote_host") }}" required>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Remote Port</label>
+    <div class="control">
+      <input class="input" type="text" name="remote_port" placeholder="22" value="{{ config.get_from_connection(connection_id, "remote_port") }}" required>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Username</label>
+    <div class="control">
+      <input class="input" type="text" name="remote_username" placeholder="root" value="{{ config.get_from_connection(connection_id, "remote_username") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Path to keyfile</label>
+    <div class="control">
+      <input class="input" type="text" name="remote_keyfile" placeholder="SSH Keyfile" value="{{ config.get_from_connection(connection_id, "remote_remote_keyfile") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+      <input class="input" type="password" name="remote_password" placeholder="passw0rd" value="{{ config.get_from_connection(connection_id, "remote_password") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Authentication Method</label>
+    <div class="select">
+      <select name="remote_auth_method">
+        <option value="password">password</option>
+        <option value="keyfile">SSH keyfile</option>
+      </select>
+    </div>
+  </div>
+</fieldset>

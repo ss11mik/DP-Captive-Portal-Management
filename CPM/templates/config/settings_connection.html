@@ -1,0 +1,44 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Configure Connection{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+
+{% if message %}
+<div class="notification is-primary">
+    <p>{{ message }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">{{ connection_id }}</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_connection', connection_id=connection_id) }}" method="post">
+    <div class="card-content">
+      <div class="field">
+        <label class="label">Connection type</label>
+        <div class="select">
+          <select name="connection_type">
+            <option value="local" {% if config.get_from_connection(connection_id, "connection_type") == "local" %}selected{% endif %}>local</option>
+            <option value="SSH" {% if config.get_from_connection(connection_id, "connection_type") == "SSH" %}selected{% endif %}>remote (SSH)</option>
+          </select>
+        </div>
+      </div>
+      {% if config.get_from_connection(connection_id, "connection_type") == "local" %}
+        (Nothing to configure.)
+      {% elif config.get_from_connection(connection_id, "connection_type")  == "SSH" %}
+        {% include 'config/SSH.html' %}
+      {% endif %}
+    </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">
+          <input class="button is-ghost" type="submit" value="Apply">
+        </a>
+    </footer>
+  </form>
+</div>
+
+
+{% endblock %}

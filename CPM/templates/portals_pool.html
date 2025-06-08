@@ -1,0 +1,134 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Captive Portals Pool{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Available Captive Portals</p>
+  </header>
+  <div class="card-content">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          {% if mode == "pool" %}
+            <th scope="col">In Active Pool</th>
+          {% elif mode == "single" %}
+            <th scope="col">Selected</th>
+          {% endif %}
+          <th scope="col">Connection</th>
+          <th scope="col">Backend</th>
+          <th scope="col">Applied Theme</th>
+          <th scope="col">Authentication Server</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for portal in portals %}
+          <tr>
+            <th scope="row">{{portal.id}}</th>
+            <td>
+            {% if mode == "pool" %}
+                {% if not portal.selected %}
+                  <form action="{{ url_for('gui_pool_add', portal_id=portal.id) }}" method="POST">
+                    <label class="checkbox">
+                      <input type="checkbox" onChange="this.form.submit()"  />
+                    </label>
+                  </form>
+                {% endif %}
+
+                {% if portal.selected %}
+                  <form action="{{ url_for('gui_pool_remove', portal_id=portal.id) }}" method="POST">
+                      <input type="checkbox" onChange="this.form.submit()" checked />
+                  </form>
+                {% endif %}
+            {% elif mode == "single" %}
+              {% if not portal.current_single %}
+                  <form action="{{ url_for('gui_settings_apply_single') }}" method="POST">
+                  <input type="hidden" name="portal" value="{{portal.id}}" />
+                    <label class="radio">
+                      <input type="radio" onChange="this.form.submit()"  />
+                    </label>
+                  </form>
+                {% endif %}
+
+                {% if portal.current_single %}
+                      <input type="radio" checked />
+                {% endif %}
+            {% endif %}
+            </td>
+            <td><a href="{{ url_for('gui_settings_connection', connection_id=portal.connection) }}">{{portal.connection}}</a></td>
+            <td>{{portal.implementation}}</td>
+            <td>{{portal.theme}}</td>
+            <td><a href="{{ url_for('gui_config_auth', auth_server_id=portal.auth_server) }}">{{portal.auth_server}}</a></td>
+            <td>
+              <a class="button" href="{{ url_for('gui_settings_portal', portal_id=portal.id) }}">Edit</a>
+              <a class="button" href="{{ url_for('gui_list_themes', portal_id=portal.id) }}">Switch Theme</a>
+
+              <form action="{{ url_for('gui_portal_remove', portal_id=portal.id) }}" method="POST">
+                <input type="hidden" name="method" value="DELETE">
+                <input class="button has-text-danger" type="submit" value="Remove">
+              </form>
+
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <div class="card">
+    <div class="card-content">
+      <h4>Add new captive portal</h4>
+      <form method="POST" action="{{ url_for('gui_portal_add') }}" enctype="multipart/form-data">
+        <div class="field">
+          <label class="label">Captive portal ID</label>
+          <div class="control">
+            <input class="input" type="text" name="portal_id" placeholder="my_captive_portal">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Captive portal provider</label>
+          <div class="select">
+            <select name="implementation">
+              {% for implementation in portal_implementations %}
+                <option value="{{ implementation }}">{{ implementation }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Connection</label>
+          <div class="select">
+            <select name="connection">
+              {% for connection in connections %}
+                <option value="{{ connection.id }}">{{ connection.id }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Authentication Server</label>
+          <div class="select">
+            <select name="auth_server">
+              {% for auth_server in auth_servers %}
+                <option value="{{ auth_server.id }}">{{ auth_server.id }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <input type="submit" value="Add" class="button is-link">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

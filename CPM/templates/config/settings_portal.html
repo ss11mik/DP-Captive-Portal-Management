@@ -1,0 +1,74 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Captive Portal Settings{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+
+{% if message %}
+<div class="notification is-primary">
+    <p>{{ message }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Portal "{{ portal_id }}"</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_portal', portal_id=portal_id) }}" method="post">
+    <div class="card-content">
+    <div class="field">
+      <label class="label">Captive portal provider</label>
+      <div class="select">
+        <select name="implementation">
+          <option {% if config.get_from_portal(portal_id, "implementation") == "NDS" %}selected{% endif %} value="NDS">NoDogSplash</option>
+          <option {% if config.get_from_portal(portal_id, "implementation") == "pfSense" %}selected{% endif %}>pfSense</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Connection</label>
+      <div class="select">
+        <select name="connection">
+          {% for connection in connections %}
+            {% if connection.id == config.get_from_portal(portal_id, "connection") %}
+              <option value="{{ connection.id }}" selected>{{ connection.id }}</option>
+            {% else %}
+              <option value="{{ connection.id }}">{{ connection.id }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Authentication Server</label>
+      <div class="select">
+        <select name="auth_server">
+          {% for auth_server in auth_servers %}
+            {% if auth_server.id == config.get_from_portal(portal_id, "auth_server") %}
+              <option value="{{ auth_server.id }}" selected>{{ auth_server.id }}</option>
+            {% else %}
+              <option value="{{ auth_server.id }}">{{ auth_server.id }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    {% if config.get_from_portal(portal_id, "implementation") == "NDS" %}
+      {% include 'config/NDS.html' %}
+    {% elif config.get_from_portal(portal_id, "implementation") == "pfSense" %}
+      {% include 'config/pfSense.html' %}
+    {% endif %}
+    </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">
+          <input class="button is-ghost" type="submit" value="Apply">
+        </a>
+    </footer>
+  </form>
+</div>
+
+{% endblock %}

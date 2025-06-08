@@ -1,0 +1,107 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Authentication Servers{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Available Authentication Servers</p>
+  </header>
+  <div class="card-content">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Connection</th>
+          <th scope="col">Protocol</th>
+          <th scope="col">URL</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for server in servers %}
+          <tr>
+            <th scope="row">{{server.id}}</th>
+            <td><a href="{{ url_for('gui_settings_connection', connection_id=server.connection) }}">{{server.connection}}</a></td>
+            <td>{{server.protocol}}</td>
+            <td>{{server.url}}</td>
+            <td>
+              <form action="{{ url_for('gui_config_auth', auth_server_id=server.id) }}" method="GET">
+                  <input type="submit" value="Edit" class="button">
+              </form>
+
+              <a class="button" href="{{ url_for('gui_list_users', auth_server_id=server.id) }}">Manage Users</a>
+
+              <form action="{{ url_for('gui_auth_server_remove', auth_server_id=server.id) }}" method="POST">
+                <input type="hidden" name="method" value="DELETE">
+                <input class="button has-text-danger" type="submit" value="Remove">
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <div class="card">
+    <div class="card-content">
+      <h4>Add new Authentication Server</h4>
+      <form method="POST" action="{{ url_for('gui_authentication_add') }}" enctype="multipart/form-data">
+
+        <div class="field">
+          <label class="label">Authentication Server ID</label>
+          <div class="control">
+            <input class="input" type="text" name="auth_server_id" placeholder="my_authentication_server" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Connection</label>
+          <div class="select">
+            <select name="connection">
+              {% for connection in connections %}
+                <option value="{{ connection.id }}">{{ connection.id }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Protocol</label>
+          <div class="select">
+            <select name="protocol" aria-label="Select authentication protocol">
+              <option disabled>
+                authentication protocol
+              </option>
+              {% for implementations in auth_server_implementations %}
+                <option value="{{implementations}}">{{implementations}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Authentication Endpoint URL, including protocol:// and :port</label>
+          <div class="control">
+            <input class="input" type="text" name="url" type="url" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Path to user database</label>
+          <div class="control">
+          </div>
+            <input class="input" type="text" name="userfile" required>
+        </div>
+
+        <input type="submit" value="Add Authentication Server" class="button is-link">
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

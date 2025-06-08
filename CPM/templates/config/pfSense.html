@@ -1,0 +1,9 @@
+<fieldset>
+  <input type="hidden" name="backend_type" value="pfSense">
+  <div class="field">
+    <label class="label">Configuration file</label>
+    <div class="control">
+      <input class="input" type="text" name="pfsense_config" placeholder="/conf/config.xml" value="{{ config.get_from_portal(portal_id, "pfsense_config") }}">
+    </div>
+  </div>
+</fieldset>

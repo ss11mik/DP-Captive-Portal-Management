@@ -1,0 +1,104 @@
+{% extends "skeleton.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+    <div class="modal-content">
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">{{portal_id}}</p>
+        </header>
+        <div class="modal-card-body">
+
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Captive portal logs</p>
+  </header>
+  <div class="card-content">
+
+    <div class="columns">
+      <div class="column">
+        <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+          <input type="hidden" name="page" value="{{curent_page}}">
+            <label class="label">Lines per page:</label>
+            <div class="column is-2">
+          <div class="field has-addons">
+            <div class="control">
+              <input type="number" name="per-page" value="{{per_page}}" class="input">
+            </div>
+            <div class="control">
+              <button class="button is-link">Apply</button>
+            </div>
+          </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <ul class="pagination-list">
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="0">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&lt&lt</a>
+          </form>
+        </li>
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{curent_page - per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&lt</a>
+          </form>
+        </li>
+
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="number" name="page" value="{{curent_page}}" class="input is-1">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+          </form>
+        </li>
+
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{curent_page + per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&gt</a>
+          </form>
+        </li>
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{(log_len) - per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&gt&gt</a>
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+        </div>
+        <div class="card-image">
+        <!--         <div class="code"> -->
+        <pre style="display: block; overflow-x: auto; padding: 0.5em;">
+<!--         <code> -->
+{{log}}
+<!--         </code> -->
+        </pre>
+<!--         </div> -->
+  </div>
+</div>
+ </div>
+
+
+    </div>
+        <footer class="modal-card-foot">
+            ...
+        </footer>
+      </div>
+    </div>
+{% endblock %}

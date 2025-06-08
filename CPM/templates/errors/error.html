@@ -1,0 +1,23 @@
+{% extends "skeleton.html" %}
+{% block title %}CPM - {{ message }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-5">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">{{ message }}</p>
+          </header>
+          <div class="card-content">
+            <button type="button" onclick="history.back();" style="button is-link">Go back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

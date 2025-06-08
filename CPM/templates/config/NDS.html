@@ -1,0 +1,27 @@
+<fieldset>
+  <input type="hidden" name="backend_type" value="pfSense">
+  <div class="field">
+    <label class="label">NDS Folder</label>
+    <div class="control">
+      <input class="input" type="text" name="nds_folder" placeholder="" value="{{ config.get_from_portal(portal_id, "nds_folder") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">NDS Binary</label>
+    <div class="control">
+      <input class="input" type="text" name="nds_binary" placeholder="${NDS:nds_folder}nodogsplash" value="{{ config.get_from_portal(portal_id, "nds_binary") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">NDS Config</label>
+    <div class="control">
+      <input class="input" type="text" name="nds_config" placeholder="${NDS:nds_folder}resources/nodogsplash.conf" value="{{ config.get_from_portal(portal_id, "nds_config") }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">NDS Resources folder</label>
+    <div class="control">
+      <input class="input" type="text" name="nds_resources" placeholder="${NDS:nds_folder}resources/" value="{{ config.get_from_portal(portal_id, "nds_resources") }}">
+    </div>
+  </div>
+</fieldset>

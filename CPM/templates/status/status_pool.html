@@ -1,0 +1,96 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Status Page{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+
+  <section class="section">
+    <div class="container">
+      <div class="grid is-col-min-16">
+      {% for portal in portals %}
+      <div class="cell">
+        <div class="card transform is-duration-300 hover-translate-y">
+          <header class="card-header">
+            <p class="card-header-title">{{portal.id}}
+              {% if portal.is_running %}
+                <span class="tag is-success">Running</span>
+              {% else %}
+                <span class="tag">Stopped</span>
+              {% endif %}
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+            <h4>Backend: {{portal.implementation}}</h4>
+            <h4>Connection: {{portal.connection}}</h4>
+
+
+            {% if portal.is_running %}
+              <pre style="display: block; overflow-x: auto; padding: 0.5em;">
+{{portal.status}}
+              </pre>
+
+            {% endif %}
+
+            </div>
+          </div>
+
+          <footer class="card-footer">
+
+            <a class="card-footer-item">
+              {% if portal.is_running %}
+                <form action="{{ url_for('gui_status_stop', portal_id=portal.id)}}" method="POST">
+                    <button class="button is-ghost">Stop</button>
+                </form>
+              {% else %}
+                <form action="{{ url_for('gui_status_start', portal_id=portal.id)}}" method="POST">
+                  <input type="hidden" name="password" placeholder="Password" class="input">
+                  <button class="button is-ghost">Start</button>
+                </form>
+              {% endif %}
+            </a>
+
+            <a class="card-footer-item">
+              <button class="js-modal-trigger button is-ghost" data-target="logs-modal-{{ portal.id}}">View logfile</button>
+            </a>
+
+            <a class="card-footer-item">
+              <form action="{{url_for('gui_download_logfile', portal_id=portal.id)}}" method="GET">
+                <input type="submit" value="Download logfile" class="button is-ghost">
+              </form>
+            </a>
+
+          </footer>
+        </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% for portal in portals %}
+  <div id="logs-modal-{{ portal.id}}" class="modal">
+    <div class="modal-background"></div>
+
+    <div class="modal-content">
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">{{portal.id}} - Captive portal logs</p>
+        </header>
+        <div class="modal-card-body">
+          <iframe
+            title="logs"
+            width="100%" height="500"
+            src="{{url_for('gui_status_logs', portal_id=portal.id)}}">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+{% endfor %}
+</section>
+</div>
+{% endblock %}

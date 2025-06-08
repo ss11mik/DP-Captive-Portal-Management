@@ -1,0 +1,183 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Themes for {{portal_id}}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+<!--
+<div class="card">
+  <div class="card-content">
+    <div class="content">-->
+<!--<table class="pure-table-horizontal">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Preview</th>
+      <th scope="col">Change</th>
+    </tr>
+  </thead>
+  <tbody>-->
+  <section class="section">
+    <div class="container">
+      <div class="grid is-col-min-16">
+    {% for theme_id in themes_list %}
+        <div class="cell">
+
+      <div class="card transform is-duration-300 hover-translate-y">
+<!--           <div class="card-image cover-image is-overflow-hidden"> -->
+<!--           </div> -->
+          <header class="card-header">
+          {% if current_theme_id == theme_id %}
+            <p class="card-header-title">{{theme_id}} - Applied</p>
+          {% else %}
+            <p class="card-header-title">{{theme_id}}</p>
+          {% endif %}
+              <!--<div class="content has-text-grey-light">
+                  <h3>{{theme_id}}</h3>-->
+<!--               </div> -->
+          {% if application_layer.get_theme_auth_method(theme_id) == "username_password" %}
+            <span class="tag is-info">Username and Password</span>
+          {% elif application_layer.get_theme_auth_method(theme_id) == "confirm" %}
+            <span class="tag is-info">Confirming ToS</span>
+          {% endif %}
+
+          </header>
+          <div class="card-image">
+            <figure class="image">
+              <img src="{{ url_for('gui_theme_preview', theme_id=theme_id) }}" alt="No preview available">
+            </figure>
+          </div>
+
+     <!-- {% if current_theme_id == theme_id %}
+        <div class="card-content">
+        <p class="subtitle">Jeff</p>
+      </div>
+  {% endif %}-->
+    <footer class="card-footer">
+      {% if current_theme_id == theme_id %}
+        <a href="#" class="card-footer-item">
+          <input disabled class="button is-ghost" type="submit" value="Apply">
+        </a>
+      {% elif not portal_id %}
+      {% else %}
+        <a href="#" class="card-footer-item">
+          <form action="{{ url_for('gui_theme_apply', theme_id=theme_id, portal_id=portal_id) }}" method="POST">
+            <input class="button is-ghost" type="submit" value="Apply">
+        </form>
+        </a>
+      {% endif %}
+      <a href="#" class="card-footer-item">
+        <form action="{{ url_for('gui_download_theme', theme_id=theme_id) }}" method="GET">
+          <input class="button is-ghost" type="submit" value="Download">
+        </form>
+      </a>
+      <a href="#" class="card-footer-item">
+        <form action="{{ url_for('gui_delete_theme', theme_id=theme_id) }}" method="POST">
+          <input type="hidden" name="method" value="DELETE">
+          <input type="hidden" name="portal_id" value="{{portal_id}}" />
+          <input class="button is-ghost has-text-danger" type="submit" value="Delete">
+        </form>
+      </a>
+    </footer>
+    </div>
+    </div>
+    {% endfor %}
+        </div>
+      </div>
+  </section>
+ <!-- </tfoot>
+</table>-->
+ <!--   </div>
+  </div>
+</div>-->
+<div class="columns">
+
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="content">
+          <h4>Upload a new theme</h4>
+          <form method="POST" action="{{ url_for('gui_upload_theme') }}" enctype="multipart/form-data">
+          <input type="hidden" name="portal_id" value="{{portal_id}}" />
+          <div class="file has-name">
+            <label class="file-label">
+              <input class="file-input" type="file" name="theme" />
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">Select zip file in correct format</span>
+              </span>
+              <span class="file-name"></span>
+            </label>
+          </div>
+          <script>
+          // script adapted from:
+          // https://bulma.io/documentation/form/file/
+            const fileInput = document.querySelector("input[type=file]");
+            fileInput.onchange = () => {
+              if (fileInput.files.length > 0) {
+                const fileName = document.querySelector(".file-name");
+                fileName.textContent = fileInput.files[0].name;
+              }
+            };
+          </script>
+          <input type="submit" value="Upload" class="button is-link">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <h4>Create a new theme from existing portal (scrape page)</h4>
+        <form method="POST" action="{{ url_for('gui_scrape_theme') }}" enctype="multipart/form-data">
+          <input type="hidden" name="portal_id" value="{{portal_id}}" />
+
+        <div class="field">
+          <label class="label">Splash page URL</label>
+          <div class="control">
+            <input class="input" type="text" name="splash_url" type="url" placeholder="https://vut.cz" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Status page URL</label>
+          <div class="control">
+            <input class="input" type="text" name="status_url" type="url" placeholder="https://vut.cz" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Theme ID</label>
+          <div class="control">
+            <input class="input" type="text" name="id" placeholder="VUT" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Authentication type</label>
+          <div class="select">
+            <select name="auth_method" aria-label="Select authentication method">
+              {% for (val, name) in [("username_password", "Username and password"), ("confirm", "Confirming ToS")] %}
+                <option value="{{val}}">{{name}}</option>
+              {% endfor %}
+              <!--<option>Survey</option>
+              <option>Vouchers</option>
+              <option>OAUTH</option>
+              <option>SMS phone verification</option>-->
+            </select>
+          </div>
+        </div>
+
+        <input type="submit" value="Scrape" class="button is-link">
+      </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

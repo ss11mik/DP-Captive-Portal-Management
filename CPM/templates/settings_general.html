@@ -1,0 +1,76 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}General Settings{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+
+{% if message %}
+<div class="notification is-primary">
+    <p>{{ message }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">CPM Mode</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_cpm_mode') }}" method="post">
+    <div class="card-content">
+      <div class="control">
+        <label class="radio">
+          <input type="radio" name="mode" value="single" {% if config.get("mode", "mode") == "single" %}checked{% endif %}/>
+          Manage single captive portal
+        </label><br>
+        <label class="radio">
+          <input type="radio" name="mode" value="pool" {% if config.get("mode", "mode") == "pool" %}checked{% endif %} />
+          Manage pool of captive portals
+        </label>
+      </div>
+    </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">
+          <input class="button is-ghost" type="submit" value="Apply">
+        </a>
+    </footer>
+  </form>
+</div>
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Set CPM Username and Password</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_admin') }}" method="post">
+    <div class="card-content">
+      <fieldset>
+        <div class="field">
+          <label class="label">New username</label>
+          <div class="control">
+            <input class="input" type="text" name="username" placeholder="New username">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">New password</label>
+          <div class="control">
+            <input class="input" type="password" name="password" placeholder="New password">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Confirm password</label>
+          <div class="control">
+            <input class="input" type="password" name="password2" placeholder="Confirm password">
+          </div>
+        </div>
+<!--         <input type="username" name="username" placeholder="New username" aria-label="Username"> -->
+<!--         <input type="password" name="password" placeholder="New password" aria-label="Password"> -->
+<!--         <input type="password" name="password2" placeholder="Confirm password" aria-label="Password"> -->
+      </fieldset>
+    </div>
+    <footer class="card-footer">
+      <a href="#" class="card-footer-item">
+        <input class="button is-ghost" type="submit" value="Apply">
+      </a>
+    </footer>
+  </form>
+</div>
+{% endblock %}

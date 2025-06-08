@@ -1,0 +1,25 @@
+{% extends "skeleton.html" %}
+{% block content %}
+<div class="is-widescreen">
+  <div class="columns">
+    <div class="column is-2">
+      <aside class="menu">
+        <p class="menu-label">CPM - Captive Portal Management</p>
+{{nav.left.render(renderer='bulma')}}
+      </aside>
+    </div>
+
+    <div class='container'>
+      <div class="column content">
+        <section class="hero">
+          <div class="hero-body">
+            <p class="title">{% block title %}{% endblock %}</p>
+          </div>
+        </section>
+{% block content_column %}
+{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

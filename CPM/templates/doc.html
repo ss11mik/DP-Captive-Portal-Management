@@ -1,0 +1,16 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}API Reference{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="card">
+  <div class="card-content">
+    <iframe
+      title="swagger"
+      width="100%" height="820"
+      src="/docs">
+    </iframe>
+  </div>
+</div>
+{% endblock %}

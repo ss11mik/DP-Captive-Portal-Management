@@ -1,0 +1,227 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Manage User Accounts{% endblock %}
+{% block content_column %}
+
+<div class="content">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">Users List in {{ auth_server_id }}</p>
+    </header>
+    <div class="card-content">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">User ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <th scope="row">{{user.user_id}}</th>
+              <td>{{ user.username }}</td>
+              <td>
+
+              <button class="js-modal-trigger button" data-target="user-modal-{{ user.user_id }}">Reset password</button>
+
+              <form action="{{ url_for('gui_users_remove_user_by_id', auth_server_id=auth_server_id)}}" method="POST">
+                  <input type="hidden" name="method" value="DELETE">
+                  <input type="hidden" name="regex" value="{{ user.user_id }}">
+                  <input class="button is-danger" type="submit" value="Remove user">
+              </form>
+              </td>
+
+            </tr>
+          {% endfor %}
+        </tfoot>
+      </table>
+  </div>
+</div>
+
+
+<div class="content">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">Add Users</p>
+    </header>
+    <div class="card-content">
+      <div class="columns">
+        <div class="column">
+
+          <p>Add new users by uploading a CSV file in format username:user_id:password.</p>
+          <form method="POST" action="{{ url_for('gui_users_add_users', auth_server_id=auth_server_id) }}" enctype="multipart/form-data">
+            <div class="file has-name">
+              <label class="file-label">
+                <input class="file-input" type="file" name="userfile" />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">Select a CSV file with user accounts</span>
+                </span>
+                <span class="file-name"></span>
+              </label>
+            </div>
+            <script>
+            // script adapted from:
+            // https://bulma.io/documentation/form/file/
+              const fileInput = document.querySelector("input[type=file]");
+              fileInput.onchange = () => {
+                if (fileInput.files.length > 0) {
+                  const fileName = document.querySelector(".file-name");
+                  fileName.textContent = fileInput.files[0].name;
+                }
+              };
+            </script>
+            <input type="submit" value="Add users" class="button is-link">
+          </form>
+        </div>
+
+        <div class="column">
+          <p>Or Add new User manually.</p>
+          <form action="{{ url_for('gui_users_add_user', auth_server_id=auth_server_id)}}" method="POST">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="text" name="username" placeholder="Username" class="input">
+              </div>
+
+              <div class="control">
+                <input type="text" name="user_id" placeholder="User ID" class="input">
+              </div>
+
+              <div class="control">
+                <input type="password" name="password" placeholder="password" class="input">
+              </div>
+
+              <div class="control">
+                <button class="button is-link">Add user</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">Remove Users</p>
+    </header>
+    <div class="card-content">
+      <p>Remove multiple users at once by specifying regluar expression of either user ID or usernames.</p>
+
+      <div class="columns">
+        <div class="column">
+          <form action="{{ url_for('gui_users_remove_user_by_id', auth_server_id=auth_server_id)}}" method="POST">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="text" name="regex" placeholder="User ID regular expression" class="input">
+              </div>
+              <div class="control">
+                <button class="button is-link">Remove</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="column">
+          <form action="{{ url_for('gui_users_remove_user_by_username', auth_server_id=auth_server_id)}}" method="POST">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="text" name="regex" placeholder="Username regular expression" class="input">
+              </div>
+              <div class="control">
+                <button class="button is-link">Remove</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">Backup and Restore</p>
+    </header>
+    <div class="card-content">
+      <p>Backup or restore user database.</p>
+
+      <div class="columns">
+        <div class="column">
+          <form method="POST" action="{{ url_for('gui_users_backup', auth_server_id=auth_server_id) }}" enctype="multipart/form-data">
+            <input type="submit" value="Download backup" class="button is-link">
+          </form>
+        </div>
+
+        <div class="column">
+          <form method="POST" action="{{ url_for('gui_users_restore', auth_server_id=auth_server_id) }}" enctype="multipart/form-data">
+            <div class="file has-name">
+              <label class="file-label">
+                <input class="file-input" type="file" name="userfile" />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">Select a file with user accounts</span>
+                </span>
+                <span class="file-name"></span>
+              </label>
+            </div>
+            <script>
+            // script adapted from:
+            // https://bulma.io/documentation/form/file/
+              const fileInput = document.querySelector("input[type=file]");
+              fileInput.onchange = () => {
+                if (fileInput.files.length > 0) {
+                  const fileName = document.querySelector(".file-name");
+                  fileName.textContent = fileInput.files[0].name;
+                }
+              };
+            </script>
+            <input type="submit" value="Restore" class="button is-link">
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+{% for user in users %}
+  <div id="user-modal-{{ user.user_id}}" class="modal">
+    <div class="modal-background"></div>
+
+    <div class="modal-content">
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Reset password for {{user.user_id}}</p>
+        </header>
+        <div class="modal-card-body">
+          <form action="{{ url_for('gui_users_reset_password', auth_server_id=auth_server_id, user_id=user.user_id)}}" method="POST">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="password" name="new_password" placeholder="new password" class="input">
+              </div>
+              <div class="control">
+                <button class="button is-link" type="submit">Reset password</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+{% endfor %}
+
+
+</div>
+{% endblock %}

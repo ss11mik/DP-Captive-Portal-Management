@@ -1,0 +1,71 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Connections{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Available Connections</p>
+  </header>
+  <div class="card-content">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Type</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for connection in connections %}
+          <tr>
+            <th scope="row">{{connection.id}}</th>
+            <td>{{connection.connection_type}}</td>
+            <td>
+              <form action="{{ url_for('gui_settings_connection', connection_id=connection.id) }}" method="GET">
+                  <input type="submit" value="Edit" class="button">
+              </form>
+
+              <form action="{{ url_for('gui_connection_remove', connection_id=connection.id) }}" method="POST">
+                <input type="hidden" name="method" value="DELETE">
+                <input class="button has-text-danger" type="submit" value="Remove">
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <div class="card">
+    <div class="card-content">
+      <h4>Add new Connection</h4>
+      <form method="POST" action="{{ url_for('gui_connection_add') }}" enctype="multipart/form-data">
+        <div class="field">
+          <label class="label">Connection ID</label>
+          <div class="control">
+            <input class="input" type="text" name="connection_id" placeholder="my_captive_portal" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Connection Type</label>
+          <div class="select">
+            <select name="connection_type">
+              <option value="local">local</option>
+              <option value="SSH">remote (SSH)</option>
+            </select>
+          </div>
+        </div>
+
+        <input type="submit" value="Add Connection" class="button is-link">
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

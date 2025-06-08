@@ -1,0 +1,61 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Configure Authentication Server{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+
+{% if message %}
+<div class="notification is-primary">
+    <p>{{ message }}</p>
+</div>
+{% endif %}
+
+
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">{{ server.id }}</p>
+  </header>
+  <form action="{{ url_for('gui_auth_apply', auth_server_id=server.id) }}" method="POST">
+    <div class="card-content">
+
+
+      <div class="field">
+        <label class="label">Protocol</label>
+        <div class="select">
+          <select name="protocol" aria-label="Select authentication protocol">
+            <option disabled>
+              authentication protocol
+            </option>
+            {% for implementations in auth_server_implementations %}
+              <option {% if server.protocol == implementations %}selected{% endif %} value="{{implementations}}">{{implementations}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Authentication Endpoint URL, including protocol:// and :port</label>
+        <div class="control">
+        </div>
+          <input class="input" type="text" name="url" value="{{server.url}}" required>
+      </div>
+
+      <div class="field">
+        <label class="label">Path to user database</label>
+        <div class="control">
+        </div>
+          <input class="input" type="text" name="userfile" value="{{server.userfile}}" required>
+      </div>
+
+    </div>
+    <footer class="card-footer">
+      <a href="#" class="card-footer-item">
+        <input class="button is-ghost" type="submit" value="Apply">
+      </a>
+    </footer>
+  </form>
+</div>
+{% endblock %}

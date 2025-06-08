@@ -1,0 +1,74 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Captive Portal Settings{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+
+{% if message %}
+<div class="notification is-primary">
+    <p>{{ message }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Connection Settings</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_connection', connection_id=config.get('mode.single', 'connection')) }}" method="post">
+    <div class="card-content">
+      <div class="field">
+        <label class="label">Connection type</label>
+        <div class="select">
+          <select name="connection_type">
+            <option value="local" {% if config.get_from_single_connection("connection_type") == "local" %}selected{% endif %}>local</option>
+            <option value="SSH" {% if config.get_from_single_connection("connection_type") == "SSH" %}selected{% endif %}>remote (SSH)</option>
+          </select>
+        </div>
+      </div>
+      {% if config.get_from_single_connection("connection_type") == "local" %}
+        (Nothing to configure.)
+      {% elif config.get_from_single_connection("connection_type")  == "SSH" %}
+        {% include 'settings/SSH.html' %}
+      {% endif %}
+    </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">
+          <input class="button is-ghost" type="submit" value="Apply">
+        </a>
+    </footer>
+  </form>
+</div>
+
+
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Backend Settings</p>
+  </header>
+  <form action="{{ url_for('gui_settings_apply_portal', portal_id=config.get('mode.single', 'portal')) }}" method="post">
+    <div class="card-content">
+    <div class="field">
+      <label class="label">Captive portal provider</label>
+      <div class="select">
+        <select name="implementation">
+          {% for implementation in portal_implementations %}
+            <option {% if config.get_from_single_portal("implementation") == implementation %}selected{% endif %} value="{{ implementation }}">{{ implementation }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {% if config.get_from_single_portal("implementation") == "NDS" %}
+      {% include 'settings/NDS.html' %}
+    {% elif config.get_from_single_portal("implementation") == "pfSense" %}
+      {% include 'settings/pfSense.html' %}
+    {% endif %}
+    </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">
+          <input class="button is-ghost" type="submit" value="Apply">
+        </a>
+    </footer>
+  </form>
+</div>
+{% endblock %}

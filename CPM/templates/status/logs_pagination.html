@@ -1,0 +1,81 @@
+{% extends "skeleton.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+  <nav class="level">
+      <div class="level-item">
+        <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+          <input type="hidden" name="page" value="{{curent_page}}">
+          <label class="label">Lines per page:</label>
+          <div class="column is-7">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="number" name="per-page" value="{{per_page}}" class="input">
+              </div>
+              <div class="control">
+                <button class="button is-link">Apply</button>
+              </div>
+            </div>
+          </div>
+          </form>
+      </div>
+  </nav>
+
+
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <ul class="pagination-list">
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="0">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&lt&lt</a>
+          </form>
+        </li>
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{curent_page - per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&lt</a>
+          </form>
+        </li>
+
+        <li>
+<!--           <div class="column is-7"> -->
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="number" name="page" value="{{curent_page}}" class="input">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+          </form>
+<!--           </div> -->
+        </li>
+
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{curent_page + per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&gt</a>
+          </form>
+        </li>
+        <li>
+          <form action="{{url_for('gui_status_logs', portal_id=portal_id)}}" method="GET">
+            <input type="hidden" name="page" value="{{(log_len) - per_page}}">
+            <input type="hidden" name="per-page" value="{{per_page}}">
+            <a href="javascript:;" onclick="parentNode.submit();" class="pagination-previous">&gt&gt</a>
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+        <div class="card-image">
+        <!--         <div class="code"> -->
+        <pre style="display: block; overflow-x: auto; padding: 0.5em;">
+<!--         <code> -->
+{{log}}
+<!--         </code> -->
+        </pre>
+<!--         </div> -->
+
+
+{% endblock %}

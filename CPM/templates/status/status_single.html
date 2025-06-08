@@ -1,0 +1,60 @@
+{% extends "skeleton_menu.html" %}
+{% block title %}Status Page{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content_column %}
+<div class="content">
+  <div class="card">
+
+    <div class="card-content">
+    <h3>Portal ID: {{portal_id}}
+      {% if is_running %}
+        <span class="tag is-success">Running</span>
+      {% else %}
+        <span class="tag">Stopped</span>
+      {% endif %}
+      </h3>
+    <h3>Portal Backend: {{portal_provider}}</h3>
+    {% if is_running %}
+    <form action="{{ url_for('gui_status_stop_single')}}" method="POST">
+        <button class="button is-link">Stop</button>
+    </form>
+    {% else %}
+    <form action="{{ url_for('gui_status_start_single')}}" method="POST">
+          <input type="hidden" name="password" placeholder="Password" class="input">
+        <div class="control">
+          <button class="button is-link">Start</button>
+        </div>
+    </form>
+    {% endif %}
+    </div>
+  </div>
+
+{% if is_running %}
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Status report</p>
+  </header>
+  <div class="card-image">
+    <pre style="display: block; overflow-x: auto; padding: 0.5em;">
+{{status}}
+    </pre>
+  </div>
+</div>
+
+{% endif %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Captive portal logs</p>
+  </header>
+  <div class="card-content">
+    <iframe
+      title="logs"
+      width="100%" height="500"
+      src="{{url_for('gui_status_logs', portal_id=portal_id)}}">
+    </iframe>
+  </div>
+</div>
+{% endblock %}
