@@ -1,7 +1,7 @@
 # Captive Portal Management System
 
 - author: Bc. Ondřej Mikula
-- thesis supervisor: [Ing., Jan Pluskal, Ph.D](https://www.fit.vut.cz/person/pluskal/)
+- thesis supervisor: [Ing., Jan Pluskal, Ph.D](https://www.fit.vut.cz/man/pluskal/)
 - licence: [MIT](license.txt)
 - year: 2024-2025
 
@@ -81,7 +81,7 @@ The CPM has two main configuration files, by default located in `instance` direc
 
 The following figure shows entities stored in `config.ini` and their relations:
 
-![Relations](doc/UML_class_config.pdf "Relations")
+![Relations](doc/UML_class_config.png "Relations")
 
 
 ## Extending CPM
