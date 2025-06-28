@@ -1,6 +1,5 @@
 # Captive Portal Management System
 
-- author: Bc. Ondřej Mikula
 - thesis supervisor: [Ing., Jan Pluskal, Ph.D](https://www.fit.vut.cz/man/pluskal/)
 - licence: [MIT](license.txt)
 - year: 2024-2025
